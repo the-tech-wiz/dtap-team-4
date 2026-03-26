@@ -1,0 +1,8 @@
+## This helps standardize the line endings for all operating systems so we don't run into strange bugs later
+
+* text=auto eol=lf
+*.sh text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.conf text eol=lf
+*.md text eol=lf
