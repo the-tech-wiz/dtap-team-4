@@ -6,8 +6,8 @@
  * - Amplifier AdaFruit PAM8302A
  * - Speaker
  *
- * TODO:
- * Write code to test MicroSD card adapter and amplifier
+ * TODO: Write code to test MicroSD card adapter and amplifier
+ * TODO: Network interface code
  *
  * Debug Levels (set PROTOFLOW_DEBUG_LEVEL before including library):
  * 0 = No debug output (production)
@@ -25,13 +25,13 @@
 #define DEVICE_NAME "Laugh-With-Me Buddy"  // <-- CHANGE THIS!
 
 // ============================================================================
-// STEP 1: Include the component headers you need (uncomment as needed)
+// Component headers
 // ============================================================================
 #include <components/GroveVibrator.h>
 #include <WT2605C_Player.h>
 
 // ============================================================================
-// STEP 2: Create your component instances
+// Create component instances
 //
 // Configure each component with:
 //   - A unique name (appears in PWA)
@@ -47,9 +47,8 @@ const int piezoPin = 25;
 // --- VIBRATOR ---
 GroveVibrator vibrator = {"vibrator", 32};
 
-
 // ============================================================================
-// STEP 3: Setup - runs once at startup
+// Setup
 // ============================================================================
 void setup() {
     // --- Device configuration ---
@@ -57,30 +56,41 @@ void setup() {
 
     // --- Register all your components ---
     // Each .setup() call registers the component with ProtoFlow
+
+    //outputs
     vibrator.setup();
+
+    //sensors
     pinMode(piezoPin, INPUT);
-    pinMode(19, OUTPUT);
-    digitalWrite(19, HIGH);
-    delay(500);
-    digitalWrite(19, LOW);
 
-    // Optional: LED startup blink test
+    // Optional: output test
     vibrator.pulseTest(3, 100, 100);
-
 }
 
 // ============================================================================
-// STEP 4: Loop - runs continuously
+// Loop
 // ============================================================================
 void loop() {
     // --- Update all your sensor components ---
     // Each .loop() call reads the sensor and sends data if needed
-    int vibrateState = analogRead(piezoPin);
-    Serial.println(vibrateState);
+    sense();
     delay(10);
-    if (vibrateState > 60) {
-        vibrator.pulse(50);
-    }
+}
 
+void sense() {
+  //Update all sensor components
 
+  int piezoState = analogRead(piezoPin);
+  Serial.println(piezoState);
+  if (vibrateState > 60) {
+    triggerOutput();
+  }
+}
+
+/**
+ * Trigger outputs, such as vibration motors and speakers, etc.
+ */
+void triggerOutput() {
+  vibrator.pulse(50);
+  //speaker.play() TODO: speaker play
 }
