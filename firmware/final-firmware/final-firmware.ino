@@ -22,7 +22,7 @@
 // ============================================================================
 // YOUR PROJECT NAME - This appears in the PWA device list
 // ============================================================================
-#define DEVICE_NAME "Laugh box"  // <-- CHANGE THIS!
+#define DEVICE_NAME "Laugh-With-Me Buddy"  // <-- CHANGE THIS!
 
 // ============================================================================
 // STEP 1: Include the component headers you need (uncomment as needed)
