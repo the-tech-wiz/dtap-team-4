@@ -82,7 +82,7 @@ void sense() {
 
   int piezoState = analogRead(piezoPin);
   Serial.println(piezoState);
-  if (vibrateState > 60) {
+  if (piezoState > 60) {
     triggerOutput();
   }
 }
