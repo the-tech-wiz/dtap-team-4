@@ -71,15 +71,14 @@ void setup() {
 // Loop
 // ============================================================================
 void loop() {
-    // --- Update all your sensor components ---
     // Each .loop() call reads the sensor and sends data if needed
     sense();
     delay(10);
 }
-
+/**
+ * Sense using all sensors, triggering outputs if needed
+*/
 void sense() {
-  //Update all sensor components
-
   int piezoState = analogRead(piezoPin);
   Serial.println(piezoState);
   if (piezoState > 60) {
