@@ -46,7 +46,7 @@ void setup() {
   } else Serial.println("Opened file");
 
   player.begin();
-  player.setGain(0.1);
+  player.setGain(0.01);
   Serial.println("Start playing");
 }
 

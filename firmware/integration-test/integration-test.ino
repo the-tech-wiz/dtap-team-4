@@ -27,7 +27,7 @@ const int stepsPerRevolution = 2048;
 #define IN3 16
 #define IN4 17
 
-Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
+Stepper stepVibrator(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
 // DAC + amp
 #define DAC_LRCK 32
@@ -35,7 +35,7 @@ Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 #define DAC_DIN  33
 
 // file name to play
-#define FILENAME "/laugh1.mp3"
+#define DEFAULT_AUDIO "/default_laugh.mp3"
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
@@ -46,10 +46,10 @@ void setup() {
   Serial.begin(115200);
 
   // piezo
-  pinMode(piezo, INPUT_ANA);
+  pinMode(piezo, INPUT);
 
   // motor
-  myStepper.setSpeed(60);
+  stepVibrator.setSpeed(90);
 
   // SD card
   if (!SD.begin()) {
@@ -57,10 +57,10 @@ void setup() {
   } else Serial.println("Opened SD card");
 
 
-  player.setGain(0.5);
+  player.setGain(0.02);
   player.begin();
         // open file
-    f = SD.open(FILENAME);
+    f = SD.open(DEFAULT_AUDIO);
 
   Serial.println("Done init");
 }
@@ -72,14 +72,14 @@ void loop() {
   if (vibrateState > 70) {
     Serial.println(f.size());
     if (!f) {
-      Serial.printf("Unable to open %s", FILENAME);
+      Serial.printf("Unable to open %s", DEFAULT_AUDIO);
     }
 
     while (f && player.availableForWrite() > 512) {
       int len = f.read(filebuff, 512);
       Serial.println(len);
       player.write(filebuff, len);
-      myStepper.step(stepperState);
+      stepVibrator.step(stepperState);
       stepperState = (stepperState==1)?0:1;
       if(len != 512) {
         Serial.println("Done laughing");
