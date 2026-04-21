@@ -28,7 +28,6 @@
 // STEP 1: Include the component headers you need (uncomment as needed)
 // ============================================================================
 #include <components/GroveVibrator.h>
-#include <WT2605C_Player.h>
 
 // ============================================================================
 // STEP 2: Create your component instances
