@@ -11,8 +11,8 @@
 #define DAC_BCK  25
 #define DAC_DIN  33
 
-// file name to play
-#define FILENAME "/laugh1.mp3"
+// file name to play as default/fallback audio
+#define DEFAULT_AUDIO "/default_laugh.mp3"
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
@@ -39,14 +39,14 @@ void setup() {
     // fail();
   } else Serial.println("Opened SD card");
 
-  f = SD.open(FILENAME);
+  f = SD.open(DEFAULT_AUDIO);
   if (!f) {
-    Serial.printf("Unable to open %s", FILENAME);
+    Serial.printf("Unable to open %s", DEFAULT_AUDIO);
     // fail();
   } else Serial.println("Opened file");
 
   player.begin();
-  player.setGain(0.5);
+  player.setGain(0.1);
   Serial.println("Start playing");
 }
 
