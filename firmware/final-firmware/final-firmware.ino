@@ -25,46 +25,13 @@
 #define DEVICE_NAME "Laugh-With-Me Buddy"  // <-- CHANGE THIS!
 
 // ============================================================================
-// Component headers
-// ============================================================================
-#include <components/GroveVibrator.h>
-#include <WT2605C_Player.h>
-
-// ============================================================================
-// Create component instances
-//
-// Configure each component with:
-//   - A unique name (appears in PWA)
-//   - The GPIO pin number
-//   - Component-specific settings
-//
-// IMPORTANT: Each sensor/actuator name must be unique!
-// ============================================================================
-
-// --- PIEZO SENSOR ---
-const int piezoPin = 25;
-
-// --- VIBRATOR ---
-GroveVibrator vibrator = {"vibrator", 32};
-
-// ============================================================================
 // Setup
 // ============================================================================
 void setup() {
     // --- Device configuration ---
     ProtoFlow.configureDevice(DEVICE_NAME, "ESP32");
+    outputSetup();
 
-    // --- Register all your components ---
-    // Each .setup() call registers the component with ProtoFlow
-
-    //outputs
-    vibrator.setup();
-
-    //sensors
-    pinMode(piezoPin, INPUT);
-
-    // Optional: output test
-    vibrator.pulseTest(3, 100, 100);
 }
 
 // ============================================================================
@@ -75,21 +42,6 @@ void loop() {
     sense();
     delay(10);
 }
-/**
- * Sense using all sensors, triggering outputs if needed
-*/
-void sense() {
-  int piezoState = analogRead(piezoPin);
-  Serial.println(piezoState);
-  if (piezoState > 60) {
-    triggerOutput();
-  }
-}
 
-/**
- * Trigger outputs, such as vibration motors and speakers, etc.
- */
-void triggerOutput() {
-  vibrator.pulse(50);
-  //speaker.play() TODO: speaker play
-}
+
+
