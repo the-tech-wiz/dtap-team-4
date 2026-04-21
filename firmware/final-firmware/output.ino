@@ -81,7 +81,7 @@ void triggerOutput() {
 
       if(len != 512) {
         Serial.println("Done laughing");
-        exit(0);
+        f = SD.open(DEFAULT_AUDIO);
       }
     }
 }
