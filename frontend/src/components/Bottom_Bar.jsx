@@ -1,5 +1,6 @@
 import React from "react";
 import { FaPause } from "react-icons/fa";
+import Slider from "./Slider";
 
 
 
@@ -13,14 +14,16 @@ const BottomBar = ({ currentTrack, resetter }) => {
                 ? "opacity-0 translate-y-1 pointer-events-none"
                 : "opacity-100 -translate-y-1 pointer-events-auto"
             }`} >
-            <div className="bg-gray-900 text-white px-4 py-3 w-60 overflow-hidden">
+            <div className="bg-gray-900 text-white px-4 py-3 w-100 overflow-hidden">
                 <div className="flex justify-between">
                     <span>Now Playing:</span>
                     <span>{currentTrack.track}</span>
                     <button onClick={resetter}>
                         <FaPause />
                     </button>
+                    <Slider />
                 </div>
+
             </div>
         </div >
     );
