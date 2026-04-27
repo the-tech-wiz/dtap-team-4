@@ -10,11 +10,11 @@
  *   terminal 2 → node simulator/device.js
  *
  * Then send a command with curl or Postman:
- *   POST http://localhost:3000/device/pelican-1/command
+ *   POST http://localhost:3000/device/device-1/command
  *   { "command": "playTrack", "payload": { "trackId": 3 } }
  *
  * Then read the status back:
- *   GET  http://localhost:3000/device/pelican-1/state
+ *   GET  http://localhost:3000/device/device-1/state
  */
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
@@ -22,7 +22,7 @@ const mqtt = require('mqtt');
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const DEVICE_ID  = process.env.SIM_DEVICE_ID || 'pelican-1';
+const DEVICE_ID  = process.env.SIM_DEVICE_ID || 'device-1';
 const MQTT_URL   = process.env.MQTT_URL       || 'mqtt://localhost:1883';
 const REPLY_DELAY_MS = 500; // simulate hardware processing time
 
