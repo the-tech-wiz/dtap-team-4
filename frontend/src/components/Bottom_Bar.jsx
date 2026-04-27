@@ -5,7 +5,7 @@ import Slider from "./Slider";
 
 
 // height goes from 0 to 12
-const BottomBar = ({ currentTrack, resetter }) => {
+const BottomBar = ({ currentTrack, resetter, volume, setVolume }) => {
     return (
         <div className={`
             fixed bottom-0 left-0 w-full
@@ -21,7 +21,7 @@ const BottomBar = ({ currentTrack, resetter }) => {
                     <button onClick={resetter}>
                         <FaPause />
                     </button>
-                    <Slider />
+                    <Slider value={volume} onChange={setVolume} />
                 </div>
 
             </div>

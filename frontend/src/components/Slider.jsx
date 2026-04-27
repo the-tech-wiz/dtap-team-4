@@ -1,18 +1,15 @@
 import React, { useState } from 'react'
 
-export default function Slider() {
-    const [value, setValue] = useState(50);
+export default function Slider({ value, onChange }) {
     return (
-        <div className="">
+        <div className="bg-gray-800 justify-center">
             <input
                 type="range"
                 min="0"
                 max="100"
                 value={value}
-                class="slider"
-                id="volume"
-                onChange={(e) => setValue(e.target.value)}
-                className="rounded-full"
+                onChange={(e) => onChange(Number(e.target.value))}
+                className="bg-gray-300 appearance-none cursor-pointer"
             />
         </div>
     )
