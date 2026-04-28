@@ -13,6 +13,11 @@ const FAQ = () => {
         track: "Null",
         isVisible: false
     });
+
+    const [volume, setVolume] = useState({
+        value: 0
+    });
+
     const titles = ["Animals", "Laughter"];
     const tracks = [
         ["Dog 1", "Dog 2", "Dog 3", "Cat 1", "Cat 2", "Cat 3", "Cat 4", "Fih :D"],
@@ -52,7 +57,8 @@ const FAQ = () => {
                     }
                 />
             ))}
-            <BottomBar currentTrack={currentTrack} resetter={trackResetter} />
+            <div>{volume}</div>
+            <BottomBar currentTrack={currentTrack} resetter={trackResetter} volume={volume} setVolume={setVolume} />
         </div>
     );
 };
