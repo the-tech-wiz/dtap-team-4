@@ -24,13 +24,13 @@ const FAQ = () => {
     ];
 
     const handlePlay = async (itemIndex) => {
-            try {
-                await playTrack(itemIndex);
-            } catch (err) {
-                console.error('Failed to play track', err);
-            }
-        };
-    
+        try {
+            await playTrack(itemIndex);
+        } catch (err) {
+            console.error('Failed to play track', err);
+        }
+    };
+
     const handleStop = async () => {
         try {
             await stopPlayback();
@@ -85,7 +85,6 @@ const FAQ = () => {
                     }
                 />
             ))}
-            <div>{volume}</div>
             <BottomBar currentTrack={currentTrack} resetter={trackResetter} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
         </div>
     );
