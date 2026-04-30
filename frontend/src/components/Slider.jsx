@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React from "react"
 
-export default function Slider({ value, onChange }) {
+export default function Slider({ value, setVolume, handleVolume }) {
+
     return (
         <div className="bg-gray-800 justify-center">
             <input
@@ -8,7 +9,8 @@ export default function Slider({ value, onChange }) {
                 min="0"
                 max="100"
                 value={value}
-                onChange={(e) => onChange(Number(e.target.value))}
+                onChange={(e) => setVolume(e.target.value)}
+                onMouseUp={handleVolume}
                 className="bg-gray-300 appearance-none cursor-pointer"
             />
         </div>
