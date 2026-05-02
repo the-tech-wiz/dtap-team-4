@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import Accordion from "./Accordion";
-import BottomBar from "./Bottom_Bar"
+import MediaControlBar from "./MediaControlBar"
 import { playTrack, stopPlayback, setDeviceVolume } from "../api";
 
 // important note,
 // if the user somehow (quite impossible) pressed the cancel button while no track is selected,
-// it creates a problem at because trackResetter does not set 'track'
+// it creates a problem at because resetTrack does not set 'track'
 
 
 
-const FAQ = () => {
+const TrackCollection = () => {
     const [currentTrack, setCurrentTrack] = useState({
         track: "Null",
         isVisible: false
@@ -47,7 +47,7 @@ const FAQ = () => {
         }
     }
 
-    const clickHandler = (groupIndex, itemIndex) => {
+    const handleClick = (groupIndex, itemIndex) => {
         let selectedTrack = tracks[groupIndex][itemIndex];
 
         setCurrentTrack({
@@ -57,7 +57,7 @@ const FAQ = () => {
         handlePlay(selectedTrack);
 
     };
-    const trackResetter = () => {
+    const resetTrack = () => {
         setCurrentTrack({
             isVisible: false,
         });
@@ -73,11 +73,11 @@ const FAQ = () => {
                     answer={
                         <div className="flex flex-col gap-2 p-2">
                             {tracks[groupIndex].map((label, itemIndex) => (
-                                <CustomButton
+                                <TrackButton
                                     key={itemIndex}
                                     label={label}
                                     onClick={() =>
-                                        clickHandler(groupIndex, itemIndex)
+                                        handleClick(groupIndex, itemIndex)
                                     }
                                 />
                             ))}
@@ -85,12 +85,12 @@ const FAQ = () => {
                     }
                 />
             ))}
-            <BottomBar currentTrack={currentTrack} resetter={trackResetter} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
+            <MediaControlBar currentTrack={currentTrack} resetter={resetTrack} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
         </div>
     );
 };
 
-const CustomButton = ({ label, onClick }) => {
+const TrackButton = ({ label, onClick }) => {
     return (
         <button
             onClick={onClick}
@@ -101,4 +101,4 @@ const CustomButton = ({ label, onClick }) => {
     );
 };
 
-export default FAQ;
+export default TrackCollection;

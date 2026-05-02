@@ -1,11 +1,11 @@
 import React from "react";
 import { FaPause } from "react-icons/fa";
-import Slider from "./Slider";
+import VolumeSlider from "./VolumeSlider";
 
 
 
 // height goes from 0 to 12
-const BottomBar = ({ currentTrack, resetter, volume, setVolume, handleVolume }) => {
+const MediaControlBar = ({ currentTrack, resetter, volume, setVolume, handleVolume }) => {
     return (
         <div className={`
             fixed bottom-0 left-0 w-full
@@ -21,7 +21,7 @@ const BottomBar = ({ currentTrack, resetter, volume, setVolume, handleVolume }) 
                     <button onClick={resetter}>
                         <FaPause />
                     </button>
-                    <Slider value={volume} setVolume={setVolume} handleVolume={handleVolume}/>
+                    <VolumeSlider value={volume} setVolume={setVolume} handleVolume={handleVolume} />
                 </div>
 
             </div>
@@ -29,4 +29,4 @@ const BottomBar = ({ currentTrack, resetter, volume, setVolume, handleVolume }) 
     );
 };
 
-export default BottomBar;
+export default MediaControlBar;

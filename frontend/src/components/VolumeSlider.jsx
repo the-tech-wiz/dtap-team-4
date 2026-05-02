@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function Slider({ value, setVolume, handleVolume }) {
+export default function VolumeSlider({ value, setVolume, handleVolume }) {
 
     return (
         <div className="bg-gray-800 justify-center">
