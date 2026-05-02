@@ -24,6 +24,7 @@ const TrackCollection = () => {
         isVisible: false
     });
 
+    const [deviceName, setDeviceName] = useState("Jeff");
     const [volume, setVolume] = useState(50);
 
     const titles = ["Animals", "Laughter"];
@@ -74,7 +75,11 @@ const TrackCollection = () => {
     };
 
     return (
-        <div className="p-4 bg-[#9AC2C9] rounded-lg space-y-4">
+        <div className="ui_bg">
+            <div className="text-black">
+                {deviceName}
+            </div>
+            <MediaControlBar currentTrack={currentTrack} resetter={resetTrack} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
             {titles.map((title, groupIndex) => (
                 <Accordion
                     key={groupIndex}
@@ -94,7 +99,6 @@ const TrackCollection = () => {
                     }
                 />
             ))}
-            <MediaControlBar currentTrack={currentTrack} resetter={resetTrack} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
         </div>
     );
 };

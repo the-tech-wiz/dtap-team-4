@@ -87,9 +87,24 @@ code {
   background: linear-gradient(to top, #00635D, #01172F);
 }
 
+.ui_bg {
+  padding: 10px;
+  width: 500px;
+  background-color: #9AC2C9;
+  border-radius: 10px;
+}
+
+.ui_bg>*+* {
+  margin-top: 16px;
+}
+
+.ui_secondary_bg {
+  background-color: #78b7c2;
+}
+
 .centeredIcon {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 100px;
+  font-size: 200px;
 }

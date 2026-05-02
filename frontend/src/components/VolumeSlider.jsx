@@ -1,9 +1,8 @@
 import React from "react"
 
 export default function VolumeSlider({ value, setVolume, handleVolume }) {
-
     return (
-        <div className="bg-gray-800 justify-center">
+        <div>
             <input
                 type="range"
                 min="0"
@@ -11,7 +10,7 @@ export default function VolumeSlider({ value, setVolume, handleVolume }) {
                 value={value}
                 onChange={(e) => setVolume(e.target.value)}
                 onMouseUp={handleVolume}
-                className="bg-gray-300 appearance-none cursor-pointer"
+                className="bg-white appearance-none cursor-pointer"
             />
         </div>
     )
