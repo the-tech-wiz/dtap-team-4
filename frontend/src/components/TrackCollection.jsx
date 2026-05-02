@@ -7,7 +7,16 @@ import { playTrack, stopPlayback, setDeviceVolume } from "../api";
 // if the user somehow (quite impossible) pressed the cancel button while no track is selected,
 // it creates a problem at because resetTrack does not set 'track'
 
-
+const TrackButton = ({ label, onClick }) => {
+    return (
+        <button
+            onClick={onClick}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+            {label}
+        </button>
+    );
+};
 
 const TrackCollection = () => {
     const [currentTrack, setCurrentTrack] = useState({
@@ -87,17 +96,6 @@ const TrackCollection = () => {
             ))}
             <MediaControlBar currentTrack={currentTrack} resetter={resetTrack} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
         </div>
-    );
-};
-
-const TrackButton = ({ label, onClick }) => {
-    return (
-        <button
-            onClick={onClick}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-            {label}
-        </button>
     );
 };
 

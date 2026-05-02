@@ -5,7 +5,7 @@ import VolumeSlider from "./VolumeSlider";
 
 
 // height goes from 0 to 12
-const MediaControlBar = ({ currentTrack, resetter, volume, setVolume, handleVolume }) => {
+export default function MediaControlBar({ currentTrack, resetter, volume, setVolume, handleVolume }) {
     return (
         <div className={`
             fixed bottom-0 left-0 w-full
@@ -28,5 +28,3 @@ const MediaControlBar = ({ currentTrack, resetter, volume, setVolume, handleVolu
         </div >
     );
 };
-
-export default MediaControlBar;

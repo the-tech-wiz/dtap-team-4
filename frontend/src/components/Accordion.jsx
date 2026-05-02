@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoChevronDownOutline } from "react-icons/io5";
 
-const Accordion = ({ title, answer }) => {
+export default function Accordion({ title, answer }) {
     const [isAccordionOpen, setAccordionOpen] = useState(false);
 
     return (
@@ -30,5 +30,3 @@ const Accordion = ({ title, answer }) => {
         </div >
     );
 };
-
-export default Accordion;
