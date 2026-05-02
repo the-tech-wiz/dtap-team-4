@@ -115,3 +115,10 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.iconCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100px;
+}
