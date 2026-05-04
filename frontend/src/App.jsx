@@ -1,13 +1,12 @@
-import FAQ from "./components/FAQ"
+import React, { useState } from "react";
+import Unconnected from "./components/Unconnected";
+import MainPage from "./components/MainPage";
 
-function App() {
+export default function App() {
+  const [isConnected, setConnectionStatus] = useState(true);
   return (
-    <div className="fixed left-0 w-full h-screen bg-gradient-to-t from-[#00635D] to-[#01172F]">
-      <div className="p-4">
-        <FAQ />
-      </div>
+    <div className="w-full h-full fixed left-0">
+      {isConnected ? <MainPage /> : <Unconnected />}
     </div>
   );
 }
-
-export default App
