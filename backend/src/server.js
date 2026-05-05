@@ -12,6 +12,12 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Log every incoming request
+app.use((req, res, next) => {
+  console.log(`[API] ${req.method} ${req.path}`, Object.keys(req.body).length ? req.body : '');
+  next();
+});
+
 // Attach MQTT helpers to every request so routes can publish/read state
 app.use((req, res, next) => {
   req.mqtt = mqttClient;
