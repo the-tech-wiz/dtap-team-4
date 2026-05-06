@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Accordion from "./Accordion";
+import NameField from "./NameField";
 import MediaControlBar from "./MediaControlBar"
 import { playTrack, stopPlayback, setDeviceVolume } from "../api";
 
@@ -77,7 +78,7 @@ const TrackCollection = () => {
     return (
         <div className="ui_bg">
             <div className="text-black">
-                {deviceName}
+                <NameField />
             </div>
             <MediaControlBar currentTrack={currentTrack} resetter={resetTrack} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
             {titles.map((title, groupIndex) => (
