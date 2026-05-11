@@ -3,4 +3,5 @@
 	(lib (name "GTFP08441BEU") (type "KiCad") (uri "${KIPRJMOD}/parts/GTFP08441BEU") (options "") (descr ""))
 	(lib (name "USB4085-GF-A_REVA4") (type "KiCad") (uri "${KIPRJMOD}/parts/USB4085-GF-A_REVA4") (options "") (descr ""))
 	(lib (name "Espressif") (type "KiCad") (uri "${KIPRJMOD}/parts/espressif-kicad-addon/footprints/Espressif.pretty") (options "") (descr ""))
+	(lib (name "MSD-4-A") (type "KiCad") (uri "${KIPRJMOD}/parts/MSD-4-A") (options "") (descr ""))
 )
