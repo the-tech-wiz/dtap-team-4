@@ -4,22 +4,23 @@
 #include "esp_idf_version.h"  // check IDF version
 #include <ArduinoJson.h>
 #include <string>
+using std::string;
+
 constexpr char ssid[] = "aalto open";
 constexpr char pass[] = "";
-// TODO: Send statuses
 // TODO: Receive statuses and parse
 // TODO: Drive components
 // Test Mosquitto server, see: https://test.mosquitto.org
 constexpr char server[] = "mqtt://35.228.212.78:1883";
 
-constexpr char deviceId[] = "device-1"; // repeat bc lazy and string concat annoying
+constexpr char deviceId[] = "device-1";  // repeat bc lazy and string concat annoying
 constexpr char subscribeTopic[] = "device/device-1/command";
-constexpr char publishTopic[] = "device/device-1/status"; //test
+constexpr char publishTopic[] = "device/device-1/status";  //test
 
 bool online = true;
 bool playing = false;
-std::string trackId = "Dog 1";
-int volume = 30;
+string trackId = "";
+int volume = 0;
 
 ESP32MQTTClient mqttClient;  // all params are set later
 
@@ -43,8 +44,13 @@ void setupMqtt() {
   mqttClient.setMqttClientName("ESP32-WROOM-Paja");
   mqttClient.enableLastWillMessage("lwt", "I am going offline");
   mqttClient.setKeepAlive(30);
-  mqttClient.setOnMessageCallback([](const std::string &topic, const std::string &payload) {
+  mqttClient.setOnMessageCallback([](const string &topic, const string &payload) {
     log_i("Global callback: %s: %s", topic.c_str(), payload.c_str());
+    if (topic.ends_with("command")) {
+      handleCommand(payload);
+    } else {
+      log_e("Message not a command");
+    }
   });
 
   //wifi
@@ -73,10 +79,10 @@ void sendStatus() {
   status["playing"] = playing;
   status["trackId"] = trackId.c_str();
   status["volume"] = volume;
-  std::string output;
-  serializeJson(status,output);
-  mqttClient.publish(publishTopic,output,0,false);
-  // log_i((std::string("Sent status: ") + output).c_str());
+  string output;
+  serializeJson(status, output);
+  mqttClient.publish(publishTopic, output, 0, false);
+  log_i("Sent status: %s", output.c_str());
 }
 
 // TODO: telemetry? what telemetry?
@@ -84,21 +90,44 @@ void sendTelemetry() {
   // JsonDocument telemetry;
   // telemetry["online"] = online;
 
-  // std::string output;
+  // string output;
   // serializeJson(telemetry,output);
   // mqttClient.publish(publishTopic,output,0,false);
-  // log_i((std::string("Sent telemetry: ") + output).c_str());
+  // log_i((string("Sent telemetry: ") + output).c_str());
+}
+
+void handleCommand(const std::string &payload) {
+  log_i("Executing command: %s", payload.c_str());
+  JsonDocument command;
+  auto err = deserializeJson(command, payload);
+  if (err) {
+    log_e("Command not in valid JSON");
+    return;
+  }
+  string type = command["command"];
+  if (type == "playTrack") {
+    trackId = command["payload"]["trackId"].as<string>();
+    log_i("Now playing %s", trackId.c_str());
+    playing = true;
+  } else if (type == "stopPlayback") {
+    log_i("Stopped playing");
+    playing = false;
+  } else if (type == "setVolume") {
+    volume = command["payload"]["volume"].as<int>();
+    log_i("Volume is now: %i", volume);
+  } else
+    log_e("Command not recognized");
 }
 
 int pubCount = 0;
 
 void loop() {
-  // std::string msg = "Hello: " + std::to_string(pubCount++);
-  // std::string msg;
+  // string msg = "Hello: " + std::to_string(pubCount++);
+  // string msg;
   // serializeJson(doc,msg);
   // mqttClient.publish(publishTopic, msg, 0, false);
   sendStatus();
-  delay(2000);
+  delay(3000);
 }
 
 void onMqttConnect(esp_mqtt_client_handle_t client) {
@@ -106,7 +135,7 @@ void onMqttConnect(esp_mqtt_client_handle_t client) {
   Serial.println("Connected!");
   if (mqttClient.isMyTurn(client))  // can be omitted if only one client
   {
-    mqttClient.subscribe(subscribeTopic, [](const std::string &payload) {
+    mqttClient.subscribe(subscribeTopic, [](const string &payload) {
       log_i("%s: %s", subscribeTopic, payload.c_str());
     });
 
