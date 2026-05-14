@@ -21,7 +21,7 @@ const TrackButton = ({ label, onClick }) => {
 
 const TrackCollection = () => {
     const [currentTrack, setCurrentTrack] = useState({
-        track: "Null",
+        track: "",
         isVisible: false
     });
 
@@ -70,13 +70,14 @@ const TrackCollection = () => {
     };
     const resetTrack = () => {
         setCurrentTrack({
+            track: "",
             isVisible: false,
         });
         handleStop();
     };
 
     return (
-        <div className="ui_bg">
+        <div className="panel_background">
             <div className="text-black">
                 <NameField />
             </div>

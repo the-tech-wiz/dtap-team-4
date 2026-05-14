@@ -5,7 +5,7 @@ export default function Accordion({ title, answer }) {
     const [isAccordionOpen, setAccordionOpen] = useState(false);
 
     return (
-        <div className="w-full py-1 text-black rounded-lg ui_secondary_bg">
+        <div className="w-full py-1 text-black rounded-lg panel_secondary_background">
             <div className="flex justify-center w-full">
                 <button
                     onClick={() => setAccordionOpen(!isAccordionOpen)}

@@ -83,22 +83,22 @@ code {
   background: var(--code-bg);
 }
 
-.custom_bg {
-  background: linear-gradient(to top, #00635D, #01172F);
+.app_background {
+  background: #112c49;
 }
 
-.ui_bg {
+.panel_background {
   padding: 10px;
   width: 500px;
   background-color: #9AC2C9;
   border-radius: 10px;
 }
 
-.ui_bg>*+* {
+.panel_background>*+* {
   margin-top: 16px;
 }
 
-.ui_secondary_bg {
+.panel_secondary_background {
   background-color: #78b7c2;
 }
 

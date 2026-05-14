@@ -7,8 +7,8 @@ import VolumeSlider from "./VolumeSlider";
 // height goes from 0 to 12
 export default function MediaControlBar({ currentTrack, resetter, volume, setVolume, handleVolume }) {
     return (
-        <div className="w-full flex justify-center transition-all duration-300 h-20 -translate-y-1 pointer-events-auto">
-            <div className="w-full py-1 px-5 text-black rounded-lg ui_secondary_bg">
+        <div className={`transition w-full flex justify-center transition-all duration-300 -translate-y-1 pointer-events-auto ${currentTrack.track == "" ? "opacity-0 h-10" : "opacity-100 h-20"}`}>
+            <div className="w-full py-1 px-5 text-black rounded-lg panel_secondary_background">
                 <div className="flex justify-between">
                     <div className="p-1">
                         <span>Now Playing: </span>
