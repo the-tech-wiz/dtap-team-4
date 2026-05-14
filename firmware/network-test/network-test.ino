@@ -2,14 +2,24 @@
 #include <WiFi.h>
 #include "ESP32MQTTClient.h"
 #include "esp_idf_version.h"  // check IDF version
-const char ssid[] = "aalto open";
-const char pass[] = "";
-
+#include <ArduinoJson.h>
+#include <string>
+constexpr char ssid[] = "aalto open";
+constexpr char pass[] = "";
+// TODO: Send statuses
+// TODO: Receive statuses and parse
+// TODO: Drive components
 // Test Mosquitto server, see: https://test.mosquitto.org
-const char server[] = "mqtt://broker.hivemq.com:1883";
+constexpr char server[] = "mqtt://35.228.212.78:1883";
 
-const char subscribeTopic[] = "techwiz-esp32-001/loopback";
-const char publishTopic[] = "techwiz-esp32-001/loopback";
+constexpr char deviceId[] = "device-1"; // repeat bc lazy and string concat annoying
+constexpr char subscribeTopic[] = "device/device-1/command";
+constexpr char publishTopic[] = "device/device-1/status"; //test
+
+bool online = true;
+bool playing = false;
+std::string trackId = "Dog 1";
+int volume = 30;
 
 ESP32MQTTClient mqttClient;  // all params are set later
 
@@ -24,6 +34,7 @@ void setup() {
 
   setupMqtt();
 }
+
 
 void setupMqtt() {
   //config
@@ -45,7 +56,7 @@ void setupMqtt() {
     Serial.print(".");
   }
   Serial.println();
-//   WiFi.setHostname("c3test");
+  WiFi.setHostname("c3test");
   mqttClient.loopStart();
   Serial.print("ESP32 - Connecting to MQTT broker");
 
@@ -56,11 +67,37 @@ void setupMqtt() {
   Serial.println();
 }
 
+void sendStatus() {
+  JsonDocument status;
+  status["online"] = online;
+  status["playing"] = playing;
+  status["trackId"] = trackId.c_str();
+  status["volume"] = volume;
+  std::string output;
+  serializeJson(status,output);
+  mqttClient.publish(publishTopic,output,0,false);
+  // log_i((std::string("Sent status: ") + output).c_str());
+}
+
+// TODO: telemetry? what telemetry?
+void sendTelemetry() {
+  // JsonDocument telemetry;
+  // telemetry["online"] = online;
+
+  // std::string output;
+  // serializeJson(telemetry,output);
+  // mqttClient.publish(publishTopic,output,0,false);
+  // log_i((std::string("Sent telemetry: ") + output).c_str());
+}
+
 int pubCount = 0;
 
 void loop() {
-  std::string msg = "Hello: " + std::to_string(pubCount++);
-  mqttClient.publish(publishTopic, msg, 0, false);
+  // std::string msg = "Hello: " + std::to_string(pubCount++);
+  // std::string msg;
+  // serializeJson(doc,msg);
+  // mqttClient.publish(publishTopic, msg, 0, false);
+  sendStatus();
   delay(2000);
 }
 
@@ -73,10 +110,7 @@ void onMqttConnect(esp_mqtt_client_handle_t client) {
       log_i("%s: %s", subscribeTopic, payload.c_str());
     });
 
-    mqttClient.subscribe("bar/#", [](const std::string &topic, const std::string &payload) {
-      log_i("%s: %s", topic.c_str(), payload.c_str());
-    });
-    Serial.println("Subscrizzled");
+    Serial.println("Subscribed");
   }
 }
 
