@@ -5,7 +5,7 @@ import DeviceImageHandler from './DeviceImageHandler'
 
 export default function MainPage() {
     return (
-        <div className="fixed w-full h-screen app_background">
+        <div className="h-full w-full">
             <div className="flex p-10 gap-10 flex-col justify-center items-center ">
                 <DeviceImageHandler />
                 <TrackCollection />

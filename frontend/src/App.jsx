@@ -5,7 +5,7 @@ import MainPage from "./components/MainPage";
 export default function App() {
   const [isConnected, setConnectionStatus] = useState(true);
   return (
-    <div className="w-full h-full fixed left-0">
+    <div className="flex w-full h-full left-0">
       {isConnected ? <MainPage /> : <Unconnected />}
     </div>
   );
