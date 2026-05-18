@@ -1,8 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export default function NameField() {
     const [text, setText] = useState("Jeff");
     const [isEditing, setIsEditing] = useState(false);
+
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (isEditing) {
+            inputRef.current?.focus();
+        }
+    }, [isEditing]);
+
+    function save() {
+        setIsEditing(false);
+    }
 
     return (
         <div
@@ -11,14 +23,16 @@ export default function NameField() {
             {isEditing ? (
                 <>
                     <input
+                        ref={inputRef}
                         className="w-50"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
+                        onBlur={save}
                     />
 
                     <button
                         className="w-50 text-right"
-                        onClick={() => setIsEditing(false)}
+                        onClick={save}
                     >
                         Save
                     </button>
