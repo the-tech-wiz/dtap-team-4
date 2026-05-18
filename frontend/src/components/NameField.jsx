@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { GoPencil } from "react-icons/go";
 
 export default function NameField() {
     const [text, setText] = useState("Jeff");
@@ -30,8 +31,8 @@ export default function NameField() {
                         onBlur={save}
                     />
 
-                    <span className="w-50 text-right">
-                        Edit
+                    <span className="w-50 flex justify-end">
+                        <GoPencil />
                     </span>
                 </>
             ) : (
@@ -43,11 +44,11 @@ export default function NameField() {
                     </p>
 
                     <button
-                        className="w-50 text-right"
+                        className="w-50 flex justify-end"
                         onClick={() => setIsEditing(true)}
                         disabled={isEditing}
                     >
-                        Edit
+                        <GoPencil />
                     </button>
                 </>
             )}
