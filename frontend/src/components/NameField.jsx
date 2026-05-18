@@ -30,12 +30,9 @@ export default function NameField() {
                         onBlur={save}
                     />
 
-                    <button
-                        className="w-50 text-right"
-                        onClick={save}
-                    >
-                        Save
-                    </button>
+                    <span className="w-50 text-right">
+                        Edit
+                    </span>
                 </>
             ) : (
                 <>
@@ -48,6 +45,7 @@ export default function NameField() {
                     <button
                         className="w-50 text-right"
                         onClick={() => setIsEditing(true)}
+                        disabled={isEditing}
                     >
                         Edit
                     </button>
