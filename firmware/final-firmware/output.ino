@@ -22,12 +22,15 @@
 #define DAC_DIN 4
 
 // default audio file to play (testing/fallback)
-#define DEFAULT_AUDIO "/bad apple.mp3"
+#define DEFAULT_AUDIO "/default_laugh.mp3"
+
+// volume / VOL_TO_GAIN = gain
+#define VOL_TO_GAIN 300.0
 
 // status (also transmitted via code);
 String trackId = String(DEFAULT_AUDIO);
 bool playing = false;
-int volume = 50;
+int volume = 30;  // [1-100] range
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
@@ -35,13 +38,13 @@ uint8_t filebuff[512];
 BackgroundAudioMP3 player(audio);
 
 // handling failure
-// void fail() {
-//   while (1) {
-//     if (Serial.available()) Serial.println("Restarting");
-//     delay(1000);
-//     ESP.restart();
-//   }
-// }
+void fail() {
+  while (1) {
+    if (Serial.available()) Serial.println("Restarting");
+    delay(1000);
+    ESP.restart();
+  }
+}
 
 void outputSetup() {
   Serial.println("=== Init outputs ===");
@@ -55,7 +58,7 @@ void outputSetup() {
   } else Serial.println("Opened SD card");
 
   player.begin();
-  player.setGain(volume/120.0);
+  player.setGain(volume / VOL_TO_GAIN);
   Serial.println("Init outputs complete");
 }
 
@@ -64,35 +67,33 @@ void outputSetup() {
  * Lasts for as long as the sound is playing.
  */
 void triggerOutput() {
-  // if (playing) {
-  //   Serial.println("Already playing audio");
-  //   return;
-  // }
 
   Serial.println("Playing audio and vibrating...");
-  playing = true;
 
   f = SD.open(trackId);
-  delay(2000);
   if (!f) {
     Serial.printf("Unable to open %s\n", trackId.c_str());
-    // fail();
+    fail();
   } else Serial.printf("Opened file %s\n", trackId.c_str());
 
-  digitalWrite(MOTOR_PIN,HIGH);
+  playing = true;
+  digitalWrite(MOTOR_PIN, HIGH);
 
-    int len = f.read(filebuff, 512);
-  while (f && player.availableForWrite()) {
-    player.write(filebuff, len);
+  while (f) {
+    if (player.availableForWrite() > 512) {
+      int len = f.read(filebuff, 512);
+      player.write(filebuff, len);
 
-    Serial.print("Sound left: ");
-    Serial.println(len);
-    if (len != 512) {
-      f.close();
+      if (len != 512) {
+        f.close();
+      }
+      // Serial.println(len);
+      // Serial.print("Sound left: ");
     }
-    len = f.read(filebuff, 512);
+ 
   }
+  delay(2000);
 
-  digitalWrite(MOTOR_PIN,LOW);
-  playing=false;
+  digitalWrite(MOTOR_PIN, LOW);
+  playing = false;
 }
