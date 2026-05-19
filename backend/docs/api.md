@@ -26,20 +26,28 @@ GET /health
 ```json
 {
   "status": "ok",
-  "mqtt": "connected"
+  "timestamp": "2025-01-15T10:30:00.000Z",
+  "uptime": "42s",
+  "services": {
+    "api": "running",
+    "mqtt": "connected"
+  }
 }
 ```
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `status` | string | API server status. Always `"ok"` if the server is reachable. |
-| `mqtt` | string | MQTT broker connection state. Either `"connected"` or `"disconnected"`. |
+| `status` | string | Always `"ok"` if the server is reachable. |
+| `timestamp` | string | ISO 8601 timestamp of the response. |
+| `uptime` | string | Time since the server process started. |
+| `services.api` | string | Always `"running"`. |
+| `services.mqtt` | string | MQTT broker connection state: `"connected"` or `"disconnected"`. |
 
 ---
 
 ### GET /health/ping
 
-Simple liveness check. Use this to confirm the server is reachable.
+Simple liveness check.
 
 **Request**
 ```
@@ -49,7 +57,8 @@ GET /health/ping
 **Response `200 OK`**
 ```json
 {
-  "message": "pong"
+  "pong": true,
+  "timestamp": "2025-01-15T10:30:00.000Z"
 }
 ```
 
@@ -70,19 +79,23 @@ GET /device
 ```json
 {
   "devices": {
-    "device-001": {
-      "status": "online",
-      "telemetry": {
-        "temperature": 22.4,
-        "humidity": 58
+    "device-1": {
+      "status": {
+        "online": true,
+        "playing": true,
+        "trackId": 3,
+        "volume": 50,
+        "receivedAt": "2025-01-15T10:30:00.000Z"
       },
-      "lastSeen": "2025-01-15T10:30:00.000Z"
+      "telemetry": {
+        "receivedAt": "2025-01-15T10:29:55.000Z"
+      }
     }
   }
 }
 ```
 
-> **Note:** Response shape depends on what MQTT messages have been received since the server started. No database is used — state resets on server restart.
+> **Note:** Response shape depends on what MQTT messages have been received since the server started. No database is used — state resets on server restart. Each sub-object (`status`, `telemetry`) is the raw JSON payload from the device with a `receivedAt` field appended.
 
 ---
 
@@ -99,29 +112,36 @@ GET /device/:id/state
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `id` | string | The device ID (e.g. `device-001`) |
+| `id` | string | The device ID (e.g. `device-1`) |
 
 **Response `200 OK`**
 ```json
 {
-  "id": "device-001",
-  "status": "online",
-  "telemetry": {
-    "temperature": 22.4,
-    "humidity": 58
-  },
-  "lastSeen": "2025-01-15T10:30:00.000Z"
+  "deviceId": "device-1",
+  "state": {
+    "status": {
+      "online": true,
+      "playing": true,
+      "trackId": 3,
+      "volume": 50,
+      "receivedAt": "2025-01-15T10:30:00.000Z"
+    },
+    "telemetry": {
+      "receivedAt": "2025-01-15T10:29:55.000Z"
+    }
+  }
 }
 ```
 
 **Response `404 Not Found`**
 ```json
 {
-  "error": "Device not found"
+  "error": "Device not found or has not reported yet",
+  "deviceId": "device-1"
 }
 ```
 
-Returned if no MQTT messages have been received for the given device ID.
+Returned if no MQTT messages have been received for the given device ID since the server started.
 
 ---
 
@@ -139,15 +159,15 @@ Content-Type: application/json
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `id` | string | The target device ID (e.g. `device-001`) |
+| `id` | string | The target device ID (e.g. `device-1`) |
 
 **Request Body**
 
 ```json
 {
-  "command": "set_led",
+  "command": "playTrack",
   "payload": {
-    "on": true
+    "trackId": 3
   }
 }
 ```
@@ -155,13 +175,23 @@ Content-Type: application/json
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `command` | string | Yes | The command name to send to the device |
-| `payload` | object | No | Additional parameters for the command |
+| `payload` | object | No | Additional parameters for the command. Defaults to `{}` if omitted. |
+
+**Supported commands**
+
+| `command` | `payload` | Effect |
+|-----------|-----------|--------|
+| `playTrack` | `{ "trackId": <number> }` | Play audio track by ID from SD card |
+| `stopPlayback` | — | Stop current playback |
+| `setVolume` | `{ "volume": <0–100> }` | Set output volume |
 
 **Response `200 OK`**
 ```json
 {
   "success": true,
-  "topic": "device/device-001/command"
+  "deviceId": "device-1",
+  "command": "playTrack",
+  "publishedTo": "device/device-1/command"
 }
 ```
 
@@ -172,6 +202,15 @@ Content-Type: application/json
 }
 ```
 
+**Response `500 Internal Server Error`**
+```json
+{
+  "error": "Failed to send command to device"
+}
+```
+
+Returned if the MQTT publish fails (e.g. broker is unreachable).
+
 ---
 
 ## MQTT Topic Reference
@@ -180,11 +219,20 @@ The API interacts with the following MQTT topics internally. These are not HTTP 
 
 | Topic | Direction | Description |
 |-------|-----------|-------------|
-| `device/{id}/status` | Device → API | Device online/offline status updates |
-| `device/{id}/telemetry` | Device → API | Sensor readings and measurements |
-| `device/{id}/command` | API → Device | Commands sent from the mobile app via POST endpoint |
+| `device/{id}/status` | Device → API | Device playback state (online, playing, trackId, volume) |
+| `device/{id}/telemetry` | Device → API | Sensor readings and diagnostics |
+| `device/{id}/command` | API → Device | Commands published by the POST endpoint |
 
-The API subscribes to `device/+/status` and `device/+/telemetry` on startup.
+The API subscribes to `device/+/status` (QoS 1) and `device/+/telemetry` (QoS 0) on startup.
+
+Commands are published as JSON:
+```json
+{
+  "command": "playTrack",
+  "payload": { "trackId": 3 },
+  "sentAt": "2025-01-15T10:30:00.000Z"
+}
+```
 
 ---
 
@@ -199,10 +247,18 @@ curl http://localhost:3000/health/ping
 
 # Device state
 curl http://localhost:3000/device
-curl http://localhost:3000/device/device-001/state
+curl http://localhost:3000/device/device-1/state
 
-# Send a command
-curl -X POST http://localhost:3000/device/device-001/command \
+# Send commands
+curl -X POST http://localhost:3000/device/device-1/command \
   -H "Content-Type: application/json" \
-  -d '{"command": "set_led", "payload": {"on": true}}'
+  -d '{"command": "playTrack", "payload": {"trackId": 3}}'
+
+curl -X POST http://localhost:3000/device/device-1/command \
+  -H "Content-Type: application/json" \
+  -d '{"command": "stopPlayback"}'
+
+curl -X POST http://localhost:3000/device/device-1/command \
+  -H "Content-Type: application/json" \
+  -d '{"command": "setVolume", "payload": {"volume": 75}}'
 ```
