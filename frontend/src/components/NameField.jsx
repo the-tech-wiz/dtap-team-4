@@ -38,6 +38,11 @@ export default function NameField() {
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         onBlur={save}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                save();
+                            }
+                        }}
                     />
                 ) : (
                     <p className="w-24 text-left">
