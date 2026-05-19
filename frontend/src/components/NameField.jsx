@@ -18,40 +18,33 @@ export default function NameField() {
     }
 
     return (
-        <div
-            className="h-10 p-2 flex justify-between"
-        >
-            {isEditing ? (
-                <>
+        <div className="flex h-10 justify-center items-center">
+            <div className="flex items-center">
+
+                <div className="w-8 flex justify-center">
+                    {!isEditing && (
+                        <button onClick={() => setIsEditing(true)}>
+                            <GoPencil />
+                        </button>
+                    )}
+                </div>
+
+                <div className="w-2" />
+
+                {isEditing ? (
                     <input
                         ref={inputRef}
-                        className="w-50"
+                        className="w-24 text-left border"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         onBlur={save}
                     />
-
-                    <span className="w-50 flex justify-end">
-                        <GoPencil />
-                    </span>
-                </>
-            ) : (
-                <>
-                    <p
-                        className="w-50 text-left"
-                    >
+                ) : (
+                    <p className="w-24 text-left">
                         {text}
                     </p>
-
-                    <button
-                        className="w-50 flex justify-end"
-                        onClick={() => setIsEditing(true)}
-                        disabled={isEditing}
-                    >
-                        <GoPencil />
-                    </button>
-                </>
-            )}
+                )}
+            </div>
         </div>
     );
 }
