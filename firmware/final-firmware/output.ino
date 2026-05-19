@@ -54,7 +54,7 @@ void outputSetup() {
   // SD CARD AUDIO
   if (!SD.begin()) {
     Serial.println("Fail to read SD card");
-    // fail();
+    fail();
   } else Serial.println("Opened SD card");
 
   player.begin();
