@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CgPokemon } from "react-icons/cg";
+import { FaCamera } from "react-icons/fa";
 
 export default function DeviceImageHandler() {
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -27,7 +28,7 @@ export default function DeviceImageHandler() {
             )}
 
             <label className="absolute top-0 right-0 cursor-pointer rounded-full bg-white border px-2 py-1 text-sm shadow">
-                Edit
+                <FaCamera />
 
                 <input
                     type="file"
