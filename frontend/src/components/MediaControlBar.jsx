@@ -9,8 +9,9 @@ export default function MediaControlBar({ currentTrack, resetter, volume, setVol
     return (
         <div className={`transition w-full transition-all duration-300 pointer-events-auto ${currentTrack.track == "" ? "opacity-0 h-0 pointer-events-none" : "opacity-100 h-20 pointer-events-auto"}`}>
             <div className="flex flex-col justify-center w-full gap-2 py-2 px-5 text-black rounded-lg panel_secondary_background">
-                <div className="flex flex-row justify-between w-full p-1">
-                    <div>Now Playing: </div>
+                <div className="flex flex-row justify-between w-full gap-1 p-1">
+                    <div>Playing: </div>
+
                     <div className="absolute left-1/2 -translate-x-1/2">
                         {currentTrack.track}
                     </div>
