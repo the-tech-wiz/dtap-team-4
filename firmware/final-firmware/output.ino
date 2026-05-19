@@ -1,22 +1,15 @@
 // Code concerning all output modules, e.g. audio players and vibration motors
 // ============================================================================
 // OUTPUT
-// - VIBRATION: ULN2003 driving a stepper motor
-// - AUDIO: MAX98357A Audio-SD card module
-// I/O:
-// - MicroSD card
+// - VIBRATION: Stepper motor
+// TODO: what it called?
+// - AUDIO: MAX98357A Audio module
+// INPUT:
+// - MicroSD card + reader component
 // ============================================================================
 // =============== SETUP ===================
 // --- VIBRATING STEPPER MOTOR ---
-#include <Stepper.h>
-const int stepsPerRevolution = 2048;
-
-#define IN1 4
-#define IN2 2
-#define IN3 16
-#define IN4 17
-
-Stepper stepVibrator(stepsPerRevolution, IN1, IN3, IN2, IN4);
+#define MOTOR_PIN 38
 
 // --- AUDIO-SD MODULE ---
 #include <BackgroundAudioMP3.h>
@@ -24,23 +17,36 @@ Stepper stepVibrator(stepsPerRevolution, IN1, IN3, IN2, IN4);
 #include <SD.h>
 
 // I/O for DAC
-#define DAC_LRCK 32
-#define DAC_BCK  25
-#define DAC_DIN  33
+#define DAC_LRCK 6
+#define DAC_BCK 5
+#define DAC_DIN 4
 
 // default audio file to play (testing/fallback)
-#define DEFAULT_AUDIO "/default_laugh.mp3"
+#define DEFAULT_AUDIO "/bad apple.mp3"
+
+// status (also transmitted via code);
+String trackId = String(DEFAULT_AUDIO);
+bool playing = false;
+int volume = 50;
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
 uint8_t filebuff[512];
-int stepperState = 1;
 BackgroundAudioMP3 player(audio);
 
+// handling failure
+// void fail() {
+//   while (1) {
+//     if (Serial.available()) Serial.println("Restarting");
+//     delay(1000);
+//     ESP.restart();
+//   }
+// }
+
 void outputSetup() {
-  Serial.println("Init outputs");
+  Serial.println("=== Init outputs ===");
   //VIBRATOR
-  stepVibrator.setSpeed(90);
+  pinMode(MOTOR_PIN, OUTPUT);
 
   // SD CARD AUDIO
   if (!SD.begin()) {
@@ -48,15 +54,8 @@ void outputSetup() {
     // fail();
   } else Serial.println("Opened SD card");
 
-  // TODO: move this logic to when called by net call
-  f = SD.open(DEFAULT_AUDIO);
-  if (!f) {
-    Serial.printf("Unable to open %s", DEFAULT_AUDIO);
-    // fail();
-  } else Serial.println("Opened file");
-
   player.begin();
-  player.setGain(0.05);
+  player.setGain(volume/120.0);
   Serial.println("Init outputs complete");
 }
 
@@ -65,24 +64,35 @@ void outputSetup() {
  * Lasts for as long as the sound is playing.
  */
 void triggerOutput() {
-    //Serial.println(f.size());
-    if (!f) {
-      Serial.printf("Unable to open %s", DEFAULT_AUDIO);
+  // if (playing) {
+  //   Serial.println("Already playing audio");
+  //   return;
+  // }
+
+  Serial.println("Playing audio and vibrating...");
+  playing = true;
+
+  f = SD.open(trackId);
+  delay(2000);
+  if (!f) {
+    Serial.printf("Unable to open %s\n", trackId.c_str());
+    // fail();
+  } else Serial.printf("Opened file %s\n", trackId.c_str());
+
+  digitalWrite(MOTOR_PIN,HIGH);
+
+    int len = f.read(filebuff, 512);
+  while (f && player.availableForWrite()) {
+    player.write(filebuff, len);
+
+    Serial.print("Sound left: ");
+    Serial.println(len);
+    if (len != 512) {
+      f.close();
     }
+    len = f.read(filebuff, 512);
+  }
 
-    while (f && player.availableForWrite() > 512) {
-      int len = f.read(filebuff, 512);
-      //Serial.println(len);
-      player.write(filebuff, len);
-
-      //VIBRATE
-      stepVibrator.step(stepperState);
-      stepperState = (stepperState==1)?0:1;
-
-      if(len != 512) {
-        Serial.println("Done laughing");
-        f = SD.open(DEFAULT_AUDIO);
-      }
-    }
+  digitalWrite(MOTOR_PIN,LOW);
+  playing=false;
 }
-
