@@ -3,7 +3,6 @@
 // ============================================================================
 void setup() {
     // --- Device configuration ---
-
     Serial.begin(115200);
     delay(300);
     outputSetup();
@@ -14,8 +13,7 @@ void setup() {
 // Loop
 // ============================================================================
 void loop() {
-    // Each .loop() call reads the sensor and sends data if needed
-    sense();
-    delay(150);
+    if (detectShake()) triggerOutput();
+    // delay(150);
 }
 

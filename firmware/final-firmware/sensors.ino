@@ -26,14 +26,12 @@ void sensorSetup() {
   Serial.println("Sensor setup complete");
 }
 /**
- * Sense using all sensors, triggering outputs if needed
+ * Detects whether device is being shook (large magnitude of shifting)
 */
-void sense() {
+bool detectShake() {
   accel.getGValues(&shift);
   float mag = sqrt(shift.x*shift.x+shift.y*shift.y+shift.z*shift.z);
   // Serial.print("Sensor state:");
   // Serial.println(mag);
-  if (mag > SHAKE_THRESHOLD) {
-    triggerOutput();
-  }
+  return (mag > SHAKE_THRESHOLD);
 }
