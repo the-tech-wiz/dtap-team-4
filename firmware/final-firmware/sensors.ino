@@ -8,7 +8,7 @@
 
 ADXL345_WE accel = ADXL345_WE(ADXL345_I2CADDR);
 xyzFloat shift;
-void sensorSetup() {
+void setupSensors() {
   // set up accelerometer
   Wire.setPins(ACC1_PIN, ACC2_PIN);
   Wire.begin();
@@ -18,8 +18,7 @@ void sensorSetup() {
 
   accel.setDataRate(ADXL345_DATA_RATE_12_5);
   delay(100);
-  Serial.print("Data rate: ");
-  Serial.print(accel.getDataRateAsString());
+  log_i("Data rate: %i\n",accel.getDataRateAsString());
 
   accel.setRange(ADXL345_RANGE_4G);
   accel.setLowPower(true);
@@ -31,7 +30,6 @@ void sensorSetup() {
 bool detectShake() {
   accel.getGValues(&shift);
   float mag = sqrt(shift.x*shift.x+shift.y*shift.y+shift.z*shift.z);
-  // Serial.print("Sensor state:");
-  // Serial.println(mag);
+  log_i("Sensor state: %g\n",mag);
   return (mag > SHAKE_THRESHOLD);
 }

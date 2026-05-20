@@ -21,16 +21,8 @@
 #define DAC_BCK 5
 #define DAC_DIN 4
 
-// default audio file to play (testing/fallback)
-#define DEFAULT_AUDIO "/default_laugh.mp3"
-
 // volume / VOL_TO_GAIN = gain
 #define VOL_TO_GAIN 300.0
-
-// status (also transmitted via code);
-String trackId = String(DEFAULT_AUDIO);
-bool playing = false;
-int volume = 30;  // [1-100] range
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
@@ -46,10 +38,11 @@ void fail() {
   }
 }
 
-void outputSetup() {
+void setupOutput() {
   Serial.println("=== Init outputs ===");
   //VIBRATOR
   pinMode(MOTOR_PIN, OUTPUT);
+  digitalWrite(MOTOR_PIN, LOW);
 
   // SD CARD AUDIO
   if (!SD.begin()) {
@@ -70,7 +63,7 @@ void triggerOutput() {
 
   Serial.println("Playing audio and vibrating...");
 
-  f = SD.open(trackId);
+  f = SD.open(trackId.c_str());
   if (!f) {
     Serial.printf("Unable to open %s\n", trackId.c_str());
     fail();
@@ -90,9 +83,7 @@ void triggerOutput() {
       // Serial.println(len);
       // Serial.print("Sound left: ");
     }
- 
   }
-  delay(2000);
 
   digitalWrite(MOTOR_PIN, LOW);
   playing = false;
