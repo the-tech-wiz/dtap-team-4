@@ -14,6 +14,10 @@ void setup() {
   setupOutput();
   setupSensors();
   setupCloud();
+  // vibrator only
+  // pinMode(38, OUTPUT);
+  // digitalWrite(38, HIGH);
+  
 }
 
 // ============================================================================
@@ -31,5 +35,11 @@ void loop() {
   //   sendStatus();
   // }
   // delay(150);
+
+  // digitalWrite(38,HIGH);
+  // delay(1000);
+  // digitalWrite(38,LOW);
+  // delay(1000);
+
 }
 
