@@ -87,16 +87,16 @@ void handleCommand(const std::string &payload) {
     trackId = command["payload"]["trackId"].as<string>();
     log_i("Now playing %s\n", trackId.c_str());
     triggerOutput();
-    playing = true;
 
   } else if (type == "stopPlayback") {  // TODO stopper
     Serial.println("Stopped playing");
     playing = false;
+    sendStatus();
 
   } else if (type == "setVolume") {
     volume = command["payload"]["volume"].as<int>();
     Serial.printf("Volume is now: %i\n", volume);
-
+    sendStatus();
   } else {
     Serial.println("Command not recognized");
   }

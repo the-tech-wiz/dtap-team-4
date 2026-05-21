@@ -25,11 +25,11 @@ void loop() {
   if (detectShake()) triggerOutput();
 
   //nonblocking status send timer
-  currTime = millis();
-  if (currTime - prevTime >= STATUS_SEND_INTERVAL) {
-    prevTime = currTime;
-    sendStatus();
-  }
+  // currTime = millis();
+  // if (currTime - prevTime >= STATUS_SEND_INTERVAL) {
+  //   prevTime = currTime;
+  //   sendStatus();
+  // }
   // delay(150);
 }
 

@@ -74,9 +74,9 @@ void triggerOutput() {
   } else Serial.printf("Opened file %s\n", trackId.c_str());
 
   playing = true;
-  digitalWrite(MOTOR_PIN, HIGH);
-
   sendStatus();
+
+  digitalWrite(MOTOR_PIN, HIGH);
 
   while (f&&playing) {
     if (player.availableForWrite() > 512) {
@@ -90,8 +90,9 @@ void triggerOutput() {
   }
 
   digitalWrite(MOTOR_PIN, LOW);
-  playing = false;
 
+
+  playing = false;
   sendStatus();
 
 }
