@@ -69,7 +69,7 @@ void sendStatus() {
   string output;
   serializeJson(status, output);
   mqttClient.publish(publishTopic, output, 0, false);
-  log_i("Sent status: %s", output.c_str());
+  Serial.printf("Sent status: %s\n", output.c_str());
 }
 
 void handleCommand(const std::string &payload) {
@@ -85,34 +85,34 @@ void handleCommand(const std::string &payload) {
   string type = command["command"];
   if (type == "playTrack") {
     trackId = command["payload"]["trackId"].as<string>();
-    log_i("Now playing %s", trackId.c_str());
+    log_i("Now playing %s\n", trackId.c_str());
     triggerOutput();
     playing = true;
 
   } else if (type == "stopPlayback") {  // TODO stopper
-    log_i("Stopped playing");
+    Serial.println("Stopped playing");
     playing = false;
 
   } else if (type == "setVolume") {
     volume = command["payload"]["volume"].as<int>();
-    log_i("Volume is now: %i", volume);
+    Serial.printf("Volume is now: %i\n", volume);
 
   } else {
-    log_e("Command not recognized");
+    Serial.println("Command not recognized");
   }
 }
 
-// here because has to be global
+// boilerplate
 void onMqttConnect(esp_mqtt_client_handle_t client) {
   Serial.println();
   Serial.println("Connected!");
-  // can be omitted if only one client
-  if (mqttClient.isMyTurn(client)) {
+  // // can be omitted if only one client
+  // if (mqttClient.isMyTurn(client)) {
     mqttClient.subscribe(subscribeTopic, [](const std::string &payload) {
       log_i("%s: %s", subscribeTopic, payload.c_str());
     });
     Serial.println("Subscribed");
-  }
+  // }
 }
 
 #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)

@@ -22,7 +22,7 @@
 #define DAC_DIN 4
 
 // volume / VOL_TO_GAIN = gain
-#define VOL_TO_GAIN 300.0
+#define VOL_TO_GAIN 200.0
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
@@ -32,6 +32,8 @@ BackgroundAudioMP3 player(audio);
 // handling failure
 void fail() {
   while (1) {
+    online = false;
+    sendStatus();
     if (Serial.available()) Serial.println("Restarting");
     delay(1000);
     ESP.restart();
@@ -62,17 +64,21 @@ void setupOutput() {
 void triggerOutput() {
 
   Serial.println("Playing audio and vibrating...");
+  player.setGain(volume / VOL_TO_GAIN);
 
-  f = SD.open(trackId.c_str());
+  f = SD.open(("/"+trackId+".mp3").c_str());
   if (!f) {
     Serial.printf("Unable to open %s\n", trackId.c_str());
-    fail();
+    // fail();
+    return;
   } else Serial.printf("Opened file %s\n", trackId.c_str());
 
   playing = true;
   digitalWrite(MOTOR_PIN, HIGH);
 
-  while (f) {
+  sendStatus();
+
+  while (f&&playing) {
     if (player.availableForWrite() > 512) {
       int len = f.read(filebuff, 512);
       player.write(filebuff, len);
@@ -80,11 +86,12 @@ void triggerOutput() {
       if (len != 512) {
         f.close();
       }
-      // Serial.println(len);
-      // Serial.print("Sound left: ");
     }
   }
 
   digitalWrite(MOTOR_PIN, LOW);
   playing = false;
+
+  sendStatus();
+
 }
