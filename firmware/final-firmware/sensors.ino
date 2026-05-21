@@ -30,6 +30,6 @@ void setupSensors() {
 bool detectShake() {
   accel.getGValues(&shift);
   float mag = sqrt(shift.x*shift.x+shift.y*shift.y+shift.z*shift.z);
-  log_i("Sensor state: %g\n",mag);
+  // log_i("Sensor state: %g\n",mag);
   return (mag > SHAKE_THRESHOLD);
 }
