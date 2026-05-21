@@ -10,4 +10,4 @@ constexpr char DEFAULT_TRACK_ID[]= "Jolly 1";
 bool online = false;
 string trackId = DEFAULT_TRACK_ID;
 bool playing = false;
-int volume = 20;  // [0-100] range
+int volume = 50;  // [0-100] range
