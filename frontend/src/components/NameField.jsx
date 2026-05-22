@@ -19,7 +19,7 @@ export default function NameField() {
 
     return (
         <div className="flex h-10 justify-center items-center">
-            <div className="flex items-center">
+            <div className="flex items-center -translate-x-5">
 
                 <div className="w-8 flex justify-center">
                     {!isEditing && (
@@ -34,7 +34,8 @@ export default function NameField() {
                 {isEditing ? (
                     <input
                         ref={inputRef}
-                        className="w-24 text-left border"
+                        className="text-center border"
+                        style={{ width: `${Math.max(text.length + 1, 4)}ch` }}
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         onBlur={save}
@@ -45,7 +46,7 @@ export default function NameField() {
                         }}
                     />
                 ) : (
-                    <p className="w-24 text-left">
+                    <p className="text-center">
                         {text}
                     </p>
                 )}

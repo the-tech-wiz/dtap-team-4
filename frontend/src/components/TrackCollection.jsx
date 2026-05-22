@@ -76,7 +76,7 @@ const TrackCollection = () => {
     };
 
     return (
-        <div className="panel_background justify-center">
+        <div className="panel_background">
             <div className="text-black">
                 <NameField />
             </div>
