@@ -31,7 +31,7 @@ const TrackCollection = () => {
     const [volume, setVolume] = useState(50);
 
 
-    const names = ["😄", "😆", "😂", "🤣", "🤪", "😜", "🤩", "😹", "😸", "😛"];
+  const names = ["🐿️", "😆", "😛", "😂", "🤣", "😜", "👶", "💩", "😸", "🤪"];
 
     const handlePlay = async (itemIndex) => {
         try {
