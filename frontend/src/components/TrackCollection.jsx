@@ -25,14 +25,11 @@ const TrackCollection = () => {
         isVisible: false
     });
 
-    const [deviceName, setDeviceName] = useState("Jeff");
+    const [deviceName, setDeviceName] = useState("John");
     const [volume, setVolume] = useState(50);
 
-    const titles = ["Animals", "Laughter"];
-    const tracks = [
-        ["Dog 1", "Dog 2", "Dog 3", "Cat 1", "Cat 2", "Cat 3", "Cat 4", "Fih :D"],
-        ["Deep 1", "Deep 2", "Deep 3", "Deep 4", "Jolly 1", "Jolly 2", "Jolly 3", "Jolly 4"]
-    ];
+
+    const names = ["😄", "😆", "😂", "🤣", "🤪", "😜", "🤩", "😹", "😸", "😛"];
 
     const handlePlay = async (itemIndex) => {
         try {
@@ -58,14 +55,14 @@ const TrackCollection = () => {
         }
     }
 
-    const handleClick = (groupIndex, itemIndex) => {
-        let selectedTrack = tracks[groupIndex][itemIndex];
+    const handleClick = (itemIndex) => {
+        let selectedTrack = names[itemIndex];
 
         setCurrentTrack({
             track: selectedTrack,
             isVisible: true
         });
-        handlePlay(selectedTrack);
+        handlePlay(itemIndex);
 
     };
     const resetTrack = () => {
@@ -81,26 +78,20 @@ const TrackCollection = () => {
             <div className="text-black">
                 <NameField />
             </div>
+
             <MediaControlBar currentTrack={currentTrack} resetter={resetTrack} volume={volume} setVolume={setVolume} handleVolume={handleVolume} />
-            {titles.map((title, groupIndex) => (
-                <Accordion
-                    key={groupIndex}
-                    title={title}
-                    answer={
-                        <div className="flex flex-col gap-2 p-2">
-                            {tracks[groupIndex].map((label, itemIndex) => (
-                                <TrackButton
-                                    key={itemIndex}
-                                    label={label}
-                                    onClick={() =>
-                                        handleClick(groupIndex, itemIndex)
-                                    }
-                                />
-                            ))}
-                        </div>
-                    }
-                />
-            ))}
+
+            <div className="flex grid gap-2 p-2">
+                {names.map((label, itemIndex) => (
+                    <TrackButton
+                        key={itemIndex}
+                        label={label}
+                        onClick={() =>
+                            handleClick(itemIndex)
+                        }
+                    />
+                ))}
+            </div>
         </div>
     );
 };

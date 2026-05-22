@@ -103,3 +103,9 @@ code {
   align-items: center;
   font-size: 200px;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
