@@ -12,9 +12,11 @@ const TrackButton = ({ label, onClick }) => {
     return (
         <button
             onClick={onClick}
-            className="panel_secondary_background text-white px-4 py-2 rounded"
+            className="panel_secondary_background h-20 w-20 text-white px-4 py-2 rounded flex items-center justify-center"
         >
-            {label}
+            <span className="buttonIcons">
+                {label}
+            </span>
         </button>
     );
 };
@@ -74,7 +76,7 @@ const TrackCollection = () => {
     };
 
     return (
-        <div className="panel_background">
+        <div className="panel_background justify-center">
             <div className="text-black">
                 <NameField />
             </div>

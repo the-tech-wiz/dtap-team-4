@@ -104,8 +104,15 @@ code {
   font-size: 200px;
 }
 
+.buttonIcons {
+  font-size: 50px;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
+
+  justify-items: center;
+  align-items: center;
 }
