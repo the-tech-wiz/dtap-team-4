@@ -19,7 +19,7 @@ void setupCloud() {
   // == Wifi ==
   // setup
   WiFi.mode(WIFI_STA);
-  WiFi.setHostname("Laugh-With-Me Buddy");
+  WiFi.setHostname("Cubicle Critter");
   WiFi.begin(ssid, pass);
 
   // connect
@@ -34,7 +34,7 @@ void setupCloud() {
   // setup
   mqttClient.enableDebuggingMessages();
   mqttClient.setURI(server);
-  mqttClient.setMqttClientName("Laugh-With-Me Buddy ESP32S3");
+  mqttClient.setMqttClientName("Cubical Critter ESP32S3");
   mqttClient.enableLastWillMessage("lwt", "I am going offline");
   mqttClient.setKeepAlive(30);
   mqttClient.setOnMessageCallback([](const string &topic, const string &payload) {
@@ -88,10 +88,11 @@ void handleCommand(const std::string &payload) {
     log_i("Now playing %s\n", trackId.c_str());
     triggerOutput();
 
-  } else if (type == "stopPlayback") {  // TODO stopper
+  } else if (type == "stopPlayback") {  // TODO make it work
     Serial.println("Stopped playing");
     playing = false;
     sendStatus();
+    fail();
 
   } else if (type == "setVolume") {
     volume = command["payload"]["volume"].as<int>();
