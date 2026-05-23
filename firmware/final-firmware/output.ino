@@ -35,7 +35,6 @@ void fail() {
     online = false;
     sendStatus();
     if (Serial.available()) Serial.println("Restarting");
-    delay(1000);
     ESP.restart();
   }
 }
@@ -69,8 +68,7 @@ void triggerOutput() {
   f = SD.open(("/"+trackId+".mp3").c_str());
   if (!f) {
     Serial.printf("Unable to open %s\n", trackId.c_str());
-    // fail();
-    return;
+    fail();
   } else Serial.printf("Opened file %s\n", trackId.c_str());
 
   playing = true;
@@ -82,7 +80,7 @@ void triggerOutput() {
     if (player.availableForWrite() > 512) {
       int len = f.read(filebuff, 512);
       player.write(filebuff, len);
-      log_i("%d",len);
+      // log_i("%d",len);
       if (len != 512) {
         f.close();
       }
