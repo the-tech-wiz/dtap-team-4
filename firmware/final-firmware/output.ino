@@ -27,7 +27,7 @@
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
 uint8_t filebuff[512];
-BackgroundAudioMP3 player(audio);
+BackgroundAudioMP3Class<RawDataBuffer<64 *1024>> player(audio);
 
 // handling failure
 void fail() {
@@ -88,21 +88,17 @@ void triggerOutput() {
   playStartTime = millis();
   playCurrTime = millis();
 
-  while (f&&(playCurrTime - playStartTime <= TIMEOUT_INTERVAL)) {
+  while (f && player.availableForWrite()>512 && (playCurrTime - playStartTime <= TIMEOUT_INTERVAL)) {
     playCurrTime = millis();
-    if (player.availableForWrite() > 512) {
-      int len = f.read(filebuff, 512);
-      player.write(filebuff, len);
-      // log_i("%d",len);
-      if (len != 512) {
-        f.close();
-      }
+    log_i("Can write: %d", player.availableForWrite());
+    int len = f.read(filebuff, 512);
+    player.write(filebuff, len);
+    log_i("Len: %d", len);
+    if (len != 512) {
+      f.close();
     }
   }
-  f.close();
-
-  
-  // delay(2000);
+  // f.close();
 
   digitalWrite(MOTOR_PIN, LOW);
 
