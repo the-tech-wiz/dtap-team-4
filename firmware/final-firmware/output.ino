@@ -56,14 +56,21 @@ void setupOutput() {
   Serial.println("Init outputs complete");
 }
 
+constexpr long TIMEOUT_INTERVAL = 6000; //6s
+
 /**
  * Trigger outputs, such as vibration motors and speakers, etc.
  * Lasts for as long as the sound is playing.
  */
-constexpr long TIMEOUT_INTERVAL = 10000; //10s
-unsigned long prevTime = 0;
-unsigned long currTime = 0;
+
 void triggerOutput() {
+  //for timeout
+  unsigned long playStartTime = 0;
+  unsigned long playCurrTime = 0;
+  //flush everything
+  memset(filebuff,0,sizeof(filebuff));
+  player.flush();
+  f.close();
 
   Serial.println("Playing audio and vibrating...");
   player.setGain(volume / VOL_TO_GAIN);
@@ -78,11 +85,11 @@ void triggerOutput() {
   sendStatus();
 
   digitalWrite(MOTOR_PIN, HIGH);
-  currTime = millis();
+  playStartTime = millis();
+  playCurrTime = millis();
 
-  while (f&&currTime - prevTime <= STATUS_SEND_INTERVAL)) {
-    currTime = millis();
-    prevTime = currTime;
+  while (f&&(playCurrTime - playStartTime <= TIMEOUT_INTERVAL)) {
+    playCurrTime = millis();
     if (player.availableForWrite() > 512) {
       int len = f.read(filebuff, 512);
       player.write(filebuff, len);
@@ -92,6 +99,8 @@ void triggerOutput() {
       }
     }
   }
+  f.close();
+
   
   // delay(2000);
 
