@@ -22,7 +22,7 @@
 #define DAC_DIN 4
 
 // volume / VOL_TO_GAIN = gain
-#define VOL_TO_GAIN 100.0
+#define VOL_TO_GAIN 50
 
 ESP32I2SAudio audio(DAC_BCK, DAC_LRCK, DAC_DIN);
 File f;
