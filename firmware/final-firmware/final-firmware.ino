@@ -22,19 +22,18 @@ void setup() {
 // Loop
 // ============================================================================
 
-// constexpr long STATUS_SEND_INTERVAL = 3000;
-// unsigned long prevTime = 0;
-// unsigned long currTime = 0;
+constexpr long STATUS_SEND_INTERVAL = 20000; //20s
+unsigned long prevTime = 0;
+unsigned long currTime = 0;
 void loop() {
   if (detectShake()) triggerOutput();
 
-  //nonblocking status send timer
-  // currTime = millis();
-  // if (currTime - prevTime >= STATUS_SEND_INTERVAL) {
-  //   prevTime = currTime;
-  //   sendStatus();
-  // }
-  // delay(150);
+  // nonblocking status send timer
+  currTime = millis();
+  if (currTime - prevTime >= STATUS_SEND_INTERVAL) {
+    prevTime = currTime;
+    sendStatus();
+  }
 
   // digitalWrite(38,HIGH);
   // delay(1000);
