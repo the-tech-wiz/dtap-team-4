@@ -78,11 +78,11 @@ void triggerOutput() {
 
   digitalWrite(MOTOR_PIN, HIGH);
 
-  while (f&&playing) {
+  while (f) {
     if (player.availableForWrite() > 512) {
       int len = f.read(filebuff, 512);
       player.write(filebuff, len);
-
+      log_i("%d",len);
       if (len != 512) {
         f.close();
       }
