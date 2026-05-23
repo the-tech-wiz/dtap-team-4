@@ -1,8 +1,7 @@
 // Code concerning all output modules, e.g. audio players and vibration motors
 // ============================================================================
 // OUTPUT
-// - VIBRATION: Stepper motor
-// TODO: what it called?
+// - VIBRATION: 2 vibration motors
 // - AUDIO: MAX98357A Audio module
 // INPUT:
 // - MicroSD card + reader component
@@ -75,7 +74,7 @@ void triggerOutput() {
   Serial.println("Playing audio and vibrating...");
   player.setGain(volume / VOL_TO_GAIN);
 
-  f = SD.open(("/"+trackId+".mp3").c_str());
+  f = SD.open(("/" + trackId + ".mp3").c_str());
   if (!f) {
     Serial.printf("Unable to open %s\n", trackId.c_str());
     fail();
@@ -104,5 +103,4 @@ void triggerOutput() {
 
   playing = false;
   sendStatus();
-
 }
