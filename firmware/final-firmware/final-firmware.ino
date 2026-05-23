@@ -12,6 +12,7 @@ void setup() {
   setupOutput();
   setupSensors();
   setupCloud();
+  triggerOutput(); // indicate done setup
   // vibrator only
   // pinMode(38, OUTPUT);
   // digitalWrite(38, HIGH);
