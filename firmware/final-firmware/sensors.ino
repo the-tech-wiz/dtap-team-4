@@ -4,7 +4,7 @@
 #define ADXL345_I2CADDR 0x53
 #define ACC1_PIN 1
 #define ACC2_PIN 2
-#define SHAKE_THRESHOLD 2.3
+#define SHAKE_THRESHOLD 3
 
 ADXL345_WE accel = ADXL345_WE(ADXL345_I2CADDR);
 xyzFloat shift;
