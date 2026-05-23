@@ -4,9 +4,7 @@
 // ============================================================================
 // Setup
 // ============================================================================
-constexpr long STATUS_SEND_INTERVAL = 3000;
-unsigned long prevTime = 0;
-unsigned long currTime = 0;
+
 void setup() {
   // --- Device configuration ---
   Serial.begin(115200);
@@ -24,7 +22,9 @@ void setup() {
 // Loop
 // ============================================================================
 
-
+// constexpr long STATUS_SEND_INTERVAL = 3000;
+// unsigned long prevTime = 0;
+// unsigned long currTime = 0;
 void loop() {
   if (detectShake()) triggerOutput();
 
