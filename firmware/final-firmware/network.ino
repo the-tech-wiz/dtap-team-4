@@ -34,7 +34,7 @@ void setupCloud() {
   // setup
   mqttClient.enableDebuggingMessages();
   mqttClient.setURI(server);
-  mqttClient.setMqttClientName("Cubical Critter ESP32S3");
+  mqttClient.setMqttClientName("Cubicle Critter ESP32S3");
   mqttClient.enableLastWillMessage("lwt", "I am going offline");
   mqttClient.setKeepAlive(30);
   mqttClient.setOnMessageCallback([](const string &topic, const string &payload) {
